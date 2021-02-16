@@ -23,21 +23,21 @@ const main = async() => {
                 
                 // Seleccionar opcion
                 const citySelectedId = await showCitiesResult( cities );
-                console.log('son iguales:', (citySelectedId === 'place.11654497431140100'));
-                console.log(typeof(citySelectedId));
+                const citySelected = cities.find( city => city.id === citySelectedId );
                 
                 // Clima objeto
-                const citySelected = cities.find( city => city.id === citySelectedId );
-                console.log(citySelected, 'ciudad seleccionada');
-
+                const weather = await searches.weather(citySelected.lat, citySelected.lng);
+                
                 // Mostrar resultados
+                console.clear();
                 console.log('\nInformacion del lugar\n'.green);
-                console.log('Ciudad:', citySelected.name);
+                console.log('Ciudad:', citySelected.name.green);
                 console.log('Lat:', citySelected.lat);
                 console.log('Lng:', citySelected.lng);
-                console.log('Temperatura:');
-                console.log('Minima:');
-                console.log('Maxima:');
+                console.log('Temperatura:', weather.temp);
+                console.log('Minima:', weather.min);
+                console.log('Maxima:', weather.max);
+                console.log('Como esta el clima:', weather.desc.green);
                 break;
         
             default:
