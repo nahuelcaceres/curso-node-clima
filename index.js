@@ -1,13 +1,13 @@
 require('dotenv').config();
 
-const { inputRead, inquirerMenu, pause } = require("./helpers/inquierer");
+const { inputRead, inquirerMenu, pause, showCitiesResult } = require("./helpers/inquierer");
 const Searches = require("./models/searches");
 
 const main = async() => {
     const searches = new Searches();
 
     let option;
-    
+
     do {
 
         option = await inquirerMenu();
@@ -16,20 +16,25 @@ const main = async() => {
             case 1:
                 // Mostrar mensaje.....
                 const place = await inputRead('Ciudad: ');
-                const data = await searches.city( place );
-
-                console.log(place);
                 
                 // Buscar los lugares
+                const cities = await searches.cities( place );
+                // console.log(cities);
+                
                 // Seleccionar opcion
-
+                const citySelectedId = await showCitiesResult( cities );
+                console.log('son iguales:', (citySelectedId === 'place.11654497431140100'));
+                console.log(typeof(citySelectedId));
+                
                 // Clima objeto
+                const citySelected = cities.find( city => city.id === citySelectedId );
+                console.log(citySelected, 'ciudad seleccionada');
 
                 // Mostrar resultados
                 console.log('\nInformacion del lugar\n'.green);
-                console.log('Ciudad:');
-                console.log('Lat:');
-                console.log('Lng:');
+                console.log('Ciudad:', citySelected.name);
+                console.log('Lat:', citySelected.lat);
+                console.log('Lng:', citySelected.lng);
                 console.log('Temperatura:');
                 console.log('Minima:');
                 console.log('Maxima:');
