@@ -14,7 +14,7 @@ const main = async() => {
 
         switch ( option ) {
             case 1:
-                // Mostrar mensaje
+                // Mostrar mensaje.....
                 const place = await inputRead('Ciudad: ');
                 const data = await searches.city( place );
 
