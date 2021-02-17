@@ -1,11 +1,14 @@
+const fs = require('fs');
+
 const axios = require('axios');
 
 class Searches {
 
-    history = ['Buenos Aires', 'Barcelona', 'Rio de Janeiro'];
+    history = [];
+    reposityPath = './db/database.json';
 
     constructor(){
-
+        this.loadFromRepository();
     }
 
     get paramsMapbox() {
@@ -24,6 +27,17 @@ class Searches {
                    lang: 'es',
                 };
     }
+
+    get capitalizedHistory() {
+    
+        return this.history.map( (place) => {
+            let places = place.split(' ');
+
+            places = places.map( p => p[0].toUpperCase() + p.substring(1) );
+
+            return places.join(' ');
+        });
+    };
 
     async cities( place = ''){
 
@@ -69,6 +83,37 @@ class Searches {
             console.log(err);
         }
     };
+
+    addHistory( place = '') {
+
+        if (this.history.includes( place.toLocaleLowerCase() )){
+            return;
+        }
+
+        this.history.unshift( place.toLocaleLowerCase() );
+
+        // Grabar
+        this.saveToRepository();
+    };
+
+    saveToRepository(){
+        const payload = {
+            history: this.history
+        };
+
+        fs.writeFileSync(this.reposityPath, JSON.stringify( payload ));
+    }
+
+    loadFromRepository(){
+        if (!fs.existsSync( this.reposityPath )) return;
+
+        const repositoryData = fs.readFileSync(this.reposityPath, {encoding: 'utf8'});
+
+        const data = JSON.parse(repositoryData);
+
+        this.history = data.history;
+
+    }
 }
 
 module.exports = Searches;
