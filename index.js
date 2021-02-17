@@ -23,8 +23,13 @@ const main = async() => {
                 
                 // Seleccionar opcion
                 const citySelectedId = await showCitiesResult( cities );
+                if ( citySelectedId === '0') continuer; 
+
                 const citySelected = cities.find( city => city.id === citySelectedId );
                 
+                // Guardar historial de busquedas
+                searches.addHistory( citySelected.name );
+
                 // Clima objeto
                 const weather = await searches.weather(citySelected.lat, citySelected.lng);
                 
@@ -40,6 +45,13 @@ const main = async() => {
                 console.log('Como esta el clima:', weather.desc.green);
                 break;
         
+            case 2:
+                searches.capitalizedHistory.forEach( (place, id) => {
+                    const idx = `${ id ++ }.`.green;
+                    console.log( `${ idx } ${ place }`);
+                })
+                break;
+
             default:
                 break;
         }
